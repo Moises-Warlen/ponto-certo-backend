@@ -1,0 +1,39 @@
+// C:\Projetos\ponto-certo-backend\src\middleware\permissao.js
+module.exports = (permissao) => {
+  return (req, res, next) => {
+    try {
+      const { usuario } = req;
+
+      if (!usuario) {
+        return res.status(401).json({
+          sucesso: false,
+          erro: 'Usuário não autenticado'
+        });
+      }
+
+      // MASTER tem todas as permissões
+      if (usuario.tipo === 'MASTER') {
+        return next();
+      }
+
+      // Verificar permissão específica
+      if (!usuario.temPermissao(permissao)) {
+        return res.status(403).json({
+          sucesso: false,
+          erro: 'Acesso negado',
+          mensagem: 'Você não tem permissão para esta ação',
+          permissao
+        });
+      }
+
+      next();
+
+    } catch (error) {
+      console.error('Erro no middleware de permissão:', error);
+      return res.status(500).json({
+        sucesso: false,
+        erro: 'Erro ao verificar permissão'
+      });
+    }
+  };
+};

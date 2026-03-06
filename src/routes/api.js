@@ -1,16 +1,34 @@
-// src/routes/api.js
+// C:\Projetos\ponto-certo-backend\src\routes\api.js
 const express = require('express');
 const router = express.Router();
 
-const AuthController = require('../controllers/AuthController');
-const auth = require('../middleware/auth');
+// Importar rotas
+const authRoutes = require('./auth');
+const empresaRoutes = require('./empresas');
+const funcionarioRoutes = require('./funcionarios');
+const pontoRoutes = require('./ponto');
+const relatorioRoutes = require('./relatorios');
+const adminRoutes = require('./admin');
 
 // Rotas públicas
-router.post('/auth/login', AuthController.login);
+router.use('/auth', authRoutes);
 
-// Rotas protegidas
-router.get('/teste', auth, (req, res) => {
-  res.json({ mensagem: 'Rota protegida funcionando!' });
+// Rotas protegidas (a autenticação será aplicada nos arquivos de rota)
+router.use('/empresas', empresaRoutes);
+router.use('/funcionarios', funcionarioRoutes);
+router.use('/ponto', pontoRoutes);
+router.use('/relatorios', relatorioRoutes);
+router.use('/admin', adminRoutes);
+
+// Rota de saúde
+router.get('/health', (req, res) => {
+  res.json({
+    sucesso: true,
+    status: 'OK',
+    timestamp: new Date(),
+    ambiente: process.env.NODE_ENV,
+    versao: '1.0.0'
+  });
 });
 
 module.exports = router;
