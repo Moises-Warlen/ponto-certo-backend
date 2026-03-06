@@ -5,7 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const path = require('path');
-const { PrismaClient } = require('@prisma/client');
+//const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 const app = express();
