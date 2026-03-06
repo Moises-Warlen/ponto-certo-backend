@@ -5,7 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const path = require('path');
-//const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 const app = express();
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rotas (você pode ir adicionando aos poucos)
+// Rotas
 app.get('/health', async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -53,7 +53,6 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// Rota de teste da API
 app.get('/api/teste', (req, res) => {
   res.json({ mensagem: 'API funcionando!' });
 });
@@ -62,7 +61,6 @@ const PORT = process.env.PORT || 3000;
 
 async function start() {
   try {
-    // Testar conexão com o banco
     await prisma.$connect();
     console.log('✅ Conectado ao PostgreSQL via Prisma');
 
@@ -81,7 +79,6 @@ async function start() {
 
 start();
 
-// Graceful shutdown
 process.on('SIGINT', async () => {
   await prisma.$disconnect();
   process.exit(0);
